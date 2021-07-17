@@ -39,4 +39,11 @@ public class Google_StepDefinitions {
 
     }
 
+    @When("User searches for {string}")
+    public void userSearchesFor(String arg0) {
+    }
+
+    @Then("User should see {string} in the title")
+    public void userShouldSeeInTheTitle(String arg0) {
+    }
 }
