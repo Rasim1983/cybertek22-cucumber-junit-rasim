@@ -10,5 +10,7 @@ public class DataTables_StepDefinition {
     public void user_should_see_below_words_displayed(List<String> listOfFruits) {
         System.out.println("listOfFruits size = " + listOfFruits.size());
         System.out.println("listOfFruits = " + listOfFruits);
+        //
+
     }
 }
