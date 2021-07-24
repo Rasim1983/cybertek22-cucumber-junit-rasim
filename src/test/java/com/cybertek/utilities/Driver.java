@@ -19,42 +19,48 @@ public class Driver {
   Making our 'driver' instance private so that it is not reachable from outside of the class.
   We make it static, because we want it to run before everything else, and also we will use it in a static method
    */
-    private static WebDriver driver;
+    private static ThreadLocal<WebDriver> driverPool = new ThreadLocal<>();
+
     /*
     creating re-usable utility method that will return same 'driver' instance everytime we call it.
      */
-    public static WebDriver getDriver(){
-        if (driver==null){
+    public static WebDriver getDriver() {
+        if (driverPool.get() == null) {
+
+            synchronized (Driver.class) {
+
+
 
             /*
             We read our browser type from configuration.properties file using
             .getProperty method we are creating in ConfigurationReader class.
              */
 
-            String browserType = ConfigurationReader.getProperty("browser");
+                String browserType = ConfigurationReader.getProperty("browser");
 
             /*
             Depending on the browser type our switch statement will determine
             to open specific type of browser/driver
              */
 
-            switch (browserType){
-                case "chrome":
-                    WebDriverManager.chromedriver().setup();
-                    driver = new ChromeDriver();
-                    driver.manage().window().maximize();
-                    driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-                    break;
-                case "firefox":
-                    WebDriverManager.firefoxdriver().setup();
-                    driver = new FirefoxDriver();
-                    driver.manage().window().maximize();
-                    driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-                    break;
+                switch (browserType) {
+                    case "chrome":
+                        WebDriverManager.chromedriver().setup();
+                        driverPool.set(new ChromeDriver());
+                        driverPool.get().manage().window().maximize();
+                        driverPool.get().manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+                        break;
+                    case "firefox":
+                        WebDriverManager.firefoxdriver().setup();
+                        driverPool.set(new FirefoxDriver());
+                        driverPool.get().manage().window().maximize();
+                        driverPool.get().manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+                        break;
+                }
             }
         }
         // same driver instance will be returned every time we call Driver.getDriver(); method
-        return driver;
+        return driverPool.get();
     }
 
     /*
@@ -62,10 +68,10 @@ public class Driver {
     Either null or
      */
 
-    public static void closeDriver(){
-        if (driver!=null){
-            driver.quit();
-            driver = null;
+    public static void closeDriver() {
+        if (driverPool.get() != null) {
+            driverPool.get().quit();
+            driverPool = null;
         }
     }
 
