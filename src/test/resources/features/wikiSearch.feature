@@ -35,7 +35,7 @@ Feature:   Wikipedia search functionality
       | Chuck Norris    | Chuck Norris       | Chuck Norris    |
       | Marie Curie     | Marie Curie        | Marie Curie     |
       | Natalie Dormer  | Natalie Dormer     | Natalie Dormer  |
-   #   | Ibrahim Tatlises | Ibrahim Tatlises   | Ibrahim Tatlises |
+
 #
 #  Scenario: Wikipedia Search Functionality Image Header Verification
 #    Given User is on Wikipedia home page
